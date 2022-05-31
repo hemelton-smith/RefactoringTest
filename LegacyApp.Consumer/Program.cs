@@ -1,8 +1,4 @@
-﻿using LegacyApp.Interfaces;
-using LegacyApp.Repositories;
-using LegacyApp.Services;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 
 namespace LegacyApp.Consumer
 {

@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using LegacyApp.Constants;
-using LegacyApp.Enums;
 using LegacyApp.Interfaces;
 using LegacyApp.Models;
 using System.Data;

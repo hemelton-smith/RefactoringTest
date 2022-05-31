@@ -2,9 +2,10 @@
 using LegacyApp.Interfaces;
 using LegacyApp.Models;
 using LegacyApp.Repositories;
+using LegacyApp.Services;
 using System;
 
-namespace LegacyApp.Services
+namespace LegacyApp
 {
     public class UserService : IUserService
     {
