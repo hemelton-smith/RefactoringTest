@@ -1,60 +1,38 @@
-﻿using LegacyApp.Enums;
+﻿using Dapper;
+using LegacyApp.Constants;
+using LegacyApp.Enums;
 using LegacyApp.Interfaces;
 using LegacyApp.Models;
-using Microsoft.Extensions.Configuration;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 
 namespace LegacyApp.Repositories
 {
     public class ClientRepository : IClientRepository
     {
-        private IConfiguration _configuration;
-        public ClientRepository(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
         public Client GetById(int id)
         {
             Client client = null;
 
-            string path = Directory.GetCurrentDirectory();
-            var xx = path.Substring(0, path.IndexOf('b') - 1);
-
-            var config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json").SetBasePath(xx)
-            .AddEnvironmentVariables()
-            .Build();
-
-            var connectionString = config.GetSection("ConnectionStrings").GetValue<string>("appDatabase");
-
-            //string connectionString = _configuration.GetSection("ConnectionStrings").GetSection("appDatabase").Value;
+            var connectionString = AppSettings.GetConnectionString();
 
             using (var connection = new SqlConnection(connectionString))
-            {
-                var command = new SqlCommand
+            {            
+                string storedProcedureName = "uspGetClientById";
+
+                var parameter = new
                 {
-                    Connection = connection,
-                    CommandType = CommandType.StoredProcedure,
-                    CommandText = "uspGetClientById"
+                    Id = id
                 };
 
-                var parameter = new SqlParameter("@ClientId", SqlDbType.Int) { Value = id };
-                command.Parameters.Add(parameter);
+                var returnResult = connection.QueryFirstOrDefault<Client>(storedProcedureName, parameter, commandType: CommandType.StoredProcedure);
 
-                connection.Open();
-                var reader = command.ExecuteReader(CommandBehavior.CloseConnection);
-                while (reader.Read())
+                client = new Client
                 {
-                    client = new Client
-                                      {
-                                          Id = int.Parse(reader["ClientId"].ToString()),
-                                          Name = reader["Name"].ToString(),
-                                          ClientStatus = (ClientStatus)int.Parse(reader["ClientStatusId"].ToString())
-                                      };
-                }
+                    Id = returnResult.Id,
+                    Name = returnResult.Name,
+                    ClientStatus = returnResult.ClientStatus
+                };
             }
 
             return client;

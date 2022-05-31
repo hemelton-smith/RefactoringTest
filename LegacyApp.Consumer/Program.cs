@@ -10,9 +10,6 @@ namespace LegacyApp.Consumer
     {
         static void Main(string[] args)
         {
-            var serviceProvider = new ServiceCollection()
-         .AddScoped<IClientRepository, ClientRepository>()
-         .BuildServiceProvider();
             ProveAddUser(args);
         }
 
@@ -23,7 +20,7 @@ namespace LegacyApp.Consumer
         	*/
 
             var userService = new UserService();
-            var addResult = userService.AddUser("Joe", "Soap", "joe.soap@gmail.com", new DateTime(1993, 1, 1), 4);
+            var addResult = userService.AddUser("Joe", "Soap", "joe.soap@gmail.com", new DateTime(1993, 1, 1), 1);
             Console.WriteLine("Adding Joe Soap was " + (addResult ? "successful" : "unsuccessful"));
         }
     }

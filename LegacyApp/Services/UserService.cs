@@ -2,18 +2,15 @@
 using LegacyApp.Interfaces;
 using LegacyApp.Models;
 using LegacyApp.Repositories;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.IO;
 
 namespace LegacyApp.Services
 {
     public class UserService : IUserService
     {
         public bool AddUser(string firname, string surname, string email, DateTime dateOfBirth, int clientId)
-        {
-            
-            if (string.IsNullOrEmpty(firname) || string.IsNullOrEmpty(surname) || !email.Contains("@") && !email.Contains("."))
+        {          
+            if (string.IsNullOrEmpty(firname) || string.IsNullOrEmpty(surname) || (!email.Contains("@") && !email.Contains(".")))
             {
                 return false;
             }
@@ -27,12 +24,12 @@ namespace LegacyApp.Services
                 return false;
             }
 
-            var clientRepository = new ClientRepository(null);
+            var clientRepository = new ClientRepository();
             var client = clientRepository.GetById(clientId);
 
             var user = new User
             {
-                Client = client,
+                ClientId = client.Id,
                 DateOfBirth = dateOfBirth,
                 EmailAddress = email,
                 Firstname = firname,
